@@ -31,6 +31,7 @@ use crate::backend::app_server::{
     probe_codex_app_server, spawn_workspace_session as spawn_workspace_session_inner,
     wrapper_kind_for_binary,
 };
+use crate::backend::app_server_cli::resolve_codex_launch_context;
 use crate::backend::events::AppServerEvent;
 use crate::engine::SendMessageParams;
 use crate::event_sink::TauriEventSink;

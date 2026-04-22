@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import { readdirSync, readFileSync, statSync } from "fs";
-import { join, relative, resolve } from "path";
+import { dirname, join, relative } from "path";
+import { fileURLToPath } from "url";
 
-const ROOT = resolve(new URL("..", import.meta.url).pathname);
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BRAND_PATTERN = /\b(?:CodeMoss|MossX|mossx|codemoss|moss-x|moss_x)\b/g;
 
 const INCLUDE_PATHS = [
