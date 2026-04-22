@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { ConversationItem } from "../../../types";
 import { Messages } from "./Messages";
 
@@ -11,12 +11,21 @@ vi.mock("react-i18next", () => ({
   }),
 }));
 
-if (!HTMLElement.prototype.scrollIntoView) {
-  HTMLElement.prototype.scrollIntoView = vi.fn();
-}
-
 describe("Messages shared session provenance", () => {
-  it("renders per-message provenance badge for assistant messages", () => {
+  beforeAll(() => {
+    if (!HTMLElement.prototype.scrollIntoView) {
+      HTMLElement.prototype.scrollIntoView = vi.fn();
+    }
+    if (!HTMLElement.prototype.scrollTo) {
+      HTMLElement.prototype.scrollTo = vi.fn();
+    }
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("renders per-message provenance badge for assistant messages", async () => {
     const items: ConversationItem[] = [
       {
         id: "user-1",
@@ -51,7 +60,10 @@ describe("Messages shared session provenance", () => {
       />,
     );
 
-    expect(screen.getByText("Codex")).toBeTruthy();
-    expect(screen.getByText("Claude")).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByText("Codex")).toBeTruthy();
+      expect(screen.getByText("Claude")).toBeTruthy();
+    });
   });
 });
+
