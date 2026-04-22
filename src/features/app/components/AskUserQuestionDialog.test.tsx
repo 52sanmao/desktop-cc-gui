@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import type { ComponentProps } from 'react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
@@ -179,19 +179,16 @@ describe('AskUserQuestionDialog', () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined);
     renderDialog({ onSubmit });
 
-    // Select an option
     fireEvent.click(screen.getByText('Option A').closest('button')!);
-
-    // Click submit
     fireEvent.click(screen.getByText('askUserQuestion.submit'));
 
-    await vi.runAllTimersAsync();
-
-    expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({ request_id: 1 }),
-      expect.objectContaining({ answers: expect.any(Object) }),
-    );
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({ request_id: 1 }),
+        expect.objectContaining({ answers: expect.any(Object) }),
+      );
+    });
   });
 
   it('collapses and expands the dialog', () => {

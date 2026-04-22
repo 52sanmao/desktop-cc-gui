@@ -105,7 +105,7 @@ const offenders = [];
 for (const includePath of INCLUDE_PATHS) {
   const absolutePath = join(ROOT, includePath);
   for (const file of collectFiles(absolutePath)) {
-    const rel = relative(ROOT, file);
+    const rel = relative(ROOT, file).replaceAll("\\", "/");
     if (shouldSkip(rel)) {
       continue;
     }
